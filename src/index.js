@@ -108,6 +108,29 @@ class Loader {
         return callback(err);
       }
       return err;
+    });
+  }
+
+  /**
+   * Add mapping to specified type
+   *
+   * @param {Object} data - mapping data
+   * @param {Function} [callback] - only in case callback style is used
+   *
+   * @return {Promise} only return promise if no callback is passed
+   *
+   */
+  addMapping (data, callback) {
+    this.client.indices.putMapping({
+      index: this.index,
+      type: this.type,
+      body: data
     })
+    .catch(err => {
+      if (callback) {
+        return callback(err);
+      }
+      return err;
+    });
   }
 }
