@@ -67,6 +67,24 @@ esFixtures.clear()
   });
 ```
 
+## addMapping(data, callback)
+
+Provide a mapping to the specified type when bootstraping. `data` format is specified [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-put-mapping.html).
+
+```js
+const data = {
+  properties: {
+    name: {
+      type: "string"
+    }
+  }
+};
+esFixtures.addMapping(data)
+  .catch(err => {
+    // error handling
+  });
+```
+
 # Installation
 
 ```

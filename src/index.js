@@ -68,7 +68,6 @@ class Loader {
     const loopAndDeleteDocs = response => {
       // delete all docs obtained in the last scroll search
       const promises = response.hits.hits.map((hit) => {
-        console.log(this.index, this.type)
         return client.delete({
           index: this.index,
           type: this.type,
@@ -86,7 +85,7 @@ class Loader {
       // call this function recursively until all docs have been deleted
       .then(response => {
         if (response.hits.hits.length > 0) {
-         return loopAndDeleteDocs(response); 
+          return loopAndDeleteDocs(response);
         }
         if (callback) {
           callback();
