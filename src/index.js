@@ -26,6 +26,35 @@ class Loader {
   }
 
   /**
+   * Delete index and re-create it setting optional mappings
+   *
+   * @param {Object} [data] - must be in the format specified
+   * @param {Function} [callback] - only in case callback style is used
+   *
+   * @return {Promise} only return promise if no callback is passed
+   *
+   */
+  recreateIndex (data, callback) {
+    if (typeof data === 'function') {
+      callback = data;
+      data = undefined;
+    }
+    return this.client.indices.delete(this.index)
+    .then(() => {
+      return this.client.indices.create({
+        index: this.index,
+        body: data
+      });
+    })
+    .catch(err => {
+      if (callback) {
+        return callback(err);
+      }
+      return err;
+    });
+  }
+
+  /**
    * Perform operations using bulk API
    * More info: https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
    *
