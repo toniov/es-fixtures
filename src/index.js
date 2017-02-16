@@ -120,7 +120,7 @@ class Loader {
    *
    */
   addMapping (data, callback) {
-    this.client.indices.putMapping({
+    return this.client.indices.putMapping({
       index: this.index,
       type: this.type,
       body: data
