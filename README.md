@@ -67,15 +67,40 @@ esFixtures.clear()
   });
 ```
 
+## recreateIndex(data, callback)
+
+Delete index and create it again. `data` is optional, providing type mappings while recreating the index is possible, as well as other settings, format [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-create-index.html).
+
+For example can be useful to get a fresh index with a particular mapping each time a unit test is executed.
+
+```js
+const data = { 
+  mappings: {
+    myType: {
+      properties: {
+        name: {
+          type: 'string'
+        }
+      }
+    }
+  }
+};
+
+esFixtures.recreateIndex(data)
+  .catch(err => {
+    // error handling
+  });
+```
+
 ## addMapping(data, callback)
 
-Provide a mapping to the specified type when bootstraping. `data` format is specified [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-put-mapping.html).
+Provide a mapping to the specified type when bootstraping. The index must already exist. `data` format is specified [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-put-mapping.html).
 
 ```js
 const data = {
   properties: {
     name: {
-      type: "string"
+      type: 'string'
     }
   }
 };
