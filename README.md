@@ -74,7 +74,7 @@ Delete index and create it again. `data` is optional, providing type mappings wh
 For example can be useful to get a fresh index with a particular mapping each time a unit test is executed.
 
 ```js
-const data = { 
+const data = {
   mappings: {
     myType: {
       properties: {
@@ -115,3 +115,7 @@ esFixtures.addMapping(data)
 ```
 npm install es-fixtures
 ```
+
+# Tests
+
+Coming soon.

@@ -56,6 +56,11 @@ class Loader {
         body: data
       });
     })
+    .then(() => {
+      if (callback) {
+        callback();
+      }
+    })
     .catch(err => {
       if (callback) {
         return callback(err);
