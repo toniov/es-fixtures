@@ -60,7 +60,7 @@ class Loader {
       if (callback) {
         return callback(err);
       }
-      return err;
+      throw err;
     });
   }
 
@@ -90,7 +90,7 @@ class Loader {
       if (callback) {
         return callback(err);
       }
-      return err;
+      throw err;
     });
   }
 
@@ -145,7 +145,7 @@ class Loader {
       if (callback) {
         return callback(err);
       }
-      return err;
+      throw err;
     });
   }
 
@@ -168,7 +168,7 @@ class Loader {
       if (callback) {
         return callback(err);
       }
-      return err;
+      throw err;
     });
   }
 }
