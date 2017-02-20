@@ -21,10 +21,10 @@ A list of available options is specified in the driver official [documentation](
 
 
 ```js
-const esFixtures = require('es-fixtures').bootstrap('myIndex', 'myType');
+const loader = require('es-fixtures').bootstrap('my_index', 'my_type');
 ```
 ```js
-const esFixtures = require('es-fixtures').bootstrap('myIndex', 'myType', {
+const loader = require('es-fixtures').bootstrap('my_index', 'my_type', {
   host: 'http://foo.bar:0000',
   log: 'trace'
 });
@@ -50,7 +50,7 @@ const data = [
   { delete: { _id: 3 } },
   // no document needed for this delete
 ];
-esFixtures.bulk(data)
+loader.bulk(data)
   .catch(err => {
     // error handling
   });
@@ -61,7 +61,7 @@ esFixtures.bulk(data)
 Delete all the documents in the index and type specified when bootstraping. It only deletes the document, the type mapping is kept intact.
 
 ```js
-esFixtures.clear()
+loader.clear()
   .catch(err => {
     // error handling
   });
@@ -76,7 +76,7 @@ For example can be useful to get a fresh index with a particular mapping each ti
 ```js
 const data = {
   mappings: {
-    myType: {
+    my_type: {
       properties: {
         name: {
           type: 'string'
@@ -86,7 +86,7 @@ const data = {
   }
 };
 
-esFixtures.recreateIndex(data)
+loader.recreateIndex(data)
   .catch(err => {
     // error handling
   });
@@ -104,7 +104,7 @@ const data = {
     }
   }
 };
-esFixtures.addMapping(data)
+loader.addMapping(data)
   .catch(err => {
     // error handling
   });
