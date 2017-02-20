@@ -76,7 +76,8 @@ class Loader {
     return this.client.bulk({
       index: this.index,
       type: this.type,
-      body: data
+      body: data,
+      refresh: true
     })
     .then(result => {
       if (callback) {
@@ -108,7 +109,8 @@ class Loader {
         return client.delete({
           index: this.index,
           type: this.type,
-          id: hit._id
+          id: hit._id,
+          refresh: true
         });
       });
       return Promise.all(promises)
