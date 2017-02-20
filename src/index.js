@@ -39,16 +39,9 @@ class Loader {
       callback = data;
       data = undefined;
     }
-    return this.client.indices.get({
+    return this.client.indices.delete({
       index: this.index,
-      ignoreUnavailable: true
-    })
-    .then((result) => {
-      if (result[this.index]) {
-        return this.client.indices.delete({
-          index: this.index
-        });
-      }
+      ignore: [404]
     })
     .then(() => {
       return this.client.indices.create({
