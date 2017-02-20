@@ -118,4 +118,14 @@ npm install es-fixtures
 
 # Tests
 
-Coming soon.
+```bash
+npm test
+```
+
+Tests run using [AVA](https://github.com/avajs/ava).
+
+Elasticsearch server must be running in local (localhost:9200) in order for the tests to run correctly.
+
+---
+
+Issues, pull requests or stars are appreciated.
