@@ -58,6 +58,31 @@ loader.bulk(data)
   });
 ```
 
+### load(data, options, callback)
+
+Add documents into the specified index and type. `data` contains an array of objects the documents to add to the index.
+
+`options` is an optional argument. `incremental: true` insert documents assigning an incremental `_id` from 1, by default it assigns a random `_id` (Elasticsearch default behaviour). In incremental mode it will overwrite existent documents with the same `_id`.
+
+```js
+const data = [{
+  name: 'Jotaro',
+  standName: 'Star Platinum'
+}, {
+  name: 'Jolyne',
+  standName: 'Stone Free'
+}];
+
+const options = {
+  incremental: true
+};
+
+loader.load(data, options)
+  .catch(err => {
+    // error handling
+  });
+```
+
 ### clear(callback)
 
 Delete all the documents in the index and type specified when bootstraping. It only deletes the document, the type mapping is kept intact.

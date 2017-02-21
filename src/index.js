@@ -26,6 +26,40 @@ class Loader {
   }
 
   /**
+   * Add/index documents
+   *
+   * @param {Object[]} data - must be in the format specified in the bulk API
+   * @param {Object} [options]
+   * @param {boolean} [options.incremental] - by default assign a random _id
+   * @param {Function} [callback] - only in case callback style is used
+   *
+   * @return {Promise}
+   *
+   */
+  load (data, options, callback) {
+    if (typeof options === 'function') {
+      callback = data;
+      options = undefined;
+    }
+
+    const bulkData = [];
+    if (options && options.incremental) {
+      let count = 1;
+      data.forEach(doc => {
+        bulkData.push({ index: { _id: count } });
+        bulkData.push(doc);
+      });
+    } else {
+      data.forEach(doc => {
+        bulkData.push({ index: {} });
+        bulkData.push(doc);
+      });
+    }
+
+    return this.bulk(bulkData, callback);
+  }
+
+  /**
    * Delete all the documents
    *
    * @param {Function} [callback] - only in case callback style is used

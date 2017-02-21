@@ -3,7 +3,7 @@
 const esFixtures = require('../src');
 const test = require('ava');
 // use a different index for each test
-const indexes = ['bulk_index', 'clear_index', 'recreate_index', 'recreate_unexistent_index', 'mapping_index'];
+const indexes = ['bulk_index', 'clear_index', 'recreate_index', 'recreate_unexistent_index', 'mapping_index', 'load_random_index', 'load_incremental_index'];
 
 test.before('delete indexes in case they exist', async () => {
   const client = esFixtures.bootstrap().client;
@@ -115,6 +115,34 @@ test('should add mapping', async (t) => {
     index: 'mapping_index',
     type: 'my_type'
   });
+});
+
+test('should add documents with random ids', async (t) => {
+  const loader = esFixtures.bootstrap('load_random_index', 'my_type');
+  const data = [{
+    name: 'Jotaro',
+    standName: 'Star Platinum'
+  }, {
+    name: 'Jolyne',
+    standName: 'Stone Free'
+  }];
+  const result = await loader.load(data);
+});
+
+test('should add documents with random ids', async (t) => {
+  const loader = esFixtures.bootstrap('load_incremental_index', 'my_type');
+  const data = [{
+    name: 'Jotaro',
+    standName: 'Star Platinum'
+  }, {
+    name: 'Jolyne',
+    standName: 'Stone Free'
+  }];
+  const options = {
+    incremental: true
+  };
+  const result = await loader.load(data, options);
+  console.log(JSON.stringify(result, 0, 2))
 });
 
 test.after.always('remove created indexes', async () => {
