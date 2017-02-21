@@ -14,7 +14,7 @@ Simple fixture loading for Elasticsearch on Node.js. Clean and load easily mock 
 
 ## bootstrap(index, type, config)
 
-Returns a new Loader instance, configured to interact by the default with the specified `index` and `type`.
+Returns a new Loader instance, configured to interact by default with the specified `index` and `type`.
 
 `config` parameter is optional, by default it will contain `{ host: 'localhost:9200' }`.
 A list of available options is specified in the driver official [documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html).
@@ -30,7 +30,9 @@ const loader = require('es-fixtures').bootstrap('my_index', 'my_type', {
 });
 ```
 
-## bulk(data, callback)
+## Instance methods
+
+### bulk(data, callback)
 
 Perform many index/delete operations in a single API call using the Elasticsearch bulk API. The possible actions are index, create, delete and update.
 
@@ -56,7 +58,7 @@ loader.bulk(data)
   });
 ```
 
-## clear(callback)
+### clear(callback)
 
 Delete all the documents in the index and type specified when bootstraping. It only deletes the document, the type mapping is kept intact.
 
@@ -67,11 +69,11 @@ loader.clear()
   });
 ```
 
-## recreateIndex(data, callback)
+### recreateIndex(data, callback)
 
-Delete index and create it again. `data` is optional, providing type mappings while recreating the index is possible, as well as other settings, format [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-create-index.html).
+Delete index and create it again. `data` is optional: providing type mappings while recreating the index is possible, as well as other settings, format [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-create-index.html).
 
-For example can be useful to get a fresh index with a particular mapping each time a unit test is executed.
+For example, can be useful to get a fresh index with a particular mapping each time a unit test is executed.
 
 ```js
 const data = {
@@ -92,7 +94,7 @@ loader.recreateIndex(data)
   });
 ```
 
-## addMapping(data, callback)
+### addMapping(data, callback)
 
 Provide a mapping to the specified type when bootstraping. The index must already exist. `data` format is specified [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-put-mapping.html).
 
