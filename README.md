@@ -46,7 +46,7 @@ es-fixtures clearAndLoad my_index my_type fixtures.json
 es-fixtures clear my_index my_type
 ```
 
-By default it will run in local, but `host` can be specified. Also logging verbosity can be specified setting `log`, by default it will be off.
+By default it will run in local, but `host` can be specified. Also logging level can be specified setting `log`, by default it will be off.
 
 For example:
 
