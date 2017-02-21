@@ -115,7 +115,6 @@ test('should add mapping', async (t) => {
     index: 'mapping_index',
     type: 'my_type'
   });
-  console.log(mapping)
 });
 
 test.after.always('remove created indexes', async () => {
