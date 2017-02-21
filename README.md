@@ -8,7 +8,51 @@ Simple fixture loading for Elasticsearch on Node.js. Clean and load easily mock 
   - An optional callback will be called with the final result of the method. When omitted, a promise is returned
   - Native Promises usage
 - ES6 usage
-- Use the official [Elasticsearch javascript driver](https://github.com/elastic/elasticsearch-js) as the only dependency
+- The only dependencies are [minimist](https://github.com/substack/minimist) for the CLI and the official [Elasticsearch javascript driver](https://github.com/elastic/elasticsearch-js)
+
+# CLI
+
+Install it as a global module if only the CLI is going to be used:
+
+```
+npm install es-fixtures -g
+```
+
+The CLI can be executed through `node_modules/.bin/es-fixtures` if it is installed locally.
+
+All the methods defined in the API can be executed through the CLI. The `data` parameter expected in some methods can be obtained through a `.js` file or a `.json` file.
+
+
+```
+es-fixtures <command-name> <index-name> <type-name> [data-file] [-h host] [-l log] [-i incremental]
+```
+
+For example:
+
+```bash
+echo '[{"name": "Dio"}]' > fixtures.json
+es-fixtures load my_index my_type fixtures.json
+```
+
+```bash
+echo 'module.exports = [{name: "Dio"}]' > fixtures.js
+es-fixtures load my_index my_type fixtures.json -i
+
+echo 'module.exports = [{name: "Abdul"},{name: "Polnareff"}]' > fixtures2.js
+es-fixtures clearAndLoad my_index my_type fixtures.json
+```
+
+```bash
+es-fixtures clear my_index my_type
+```
+
+By default it will run in local, but `host` can be specified. Also logging verbosity can be specified setting `log`, by default it will be off.
+
+For example:
+
+```bash
+es-fixtures clear my_index my_type -h http://foo.bar:9200 -l trace
+```
 
 # API
 
