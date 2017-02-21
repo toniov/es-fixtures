@@ -21,7 +21,7 @@ test('should use bulk properly', async (t) => {
     { index: { _id: 1 } },
     { name: 'Jotaro' },
     { index: { _id: 2 } },
-    { name: 'Joline' },
+    { name: 'Jolyne' },
   ];
   const result = await loader.bulk(data);
   t.false(result.errors);
