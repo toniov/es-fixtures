@@ -26,79 +26,11 @@ class Loader {
   }
 
   /**
-   * Delete index and re-create it setting optional mappings
-   *
-   * @param {Object} [data] - must be in the format specified
-   * @param {Function} [callback] - only in case callback style is used
-   *
-   * @return {Promise} only return promise if no callback is passed
-   *
-   */
-  recreateIndex (data, callback) {
-    if (typeof data === 'function') {
-      callback = data;
-      data = undefined;
-    }
-    return this.client.indices.delete({
-      index: this.index,
-      ignore: [404]
-    })
-    .then(() => {
-      return this.client.indices.create({
-        index: this.index,
-        body: data
-      });
-    })
-    .then(() => {
-      if (callback) {
-        callback();
-      }
-    })
-    .catch(err => {
-      if (callback) {
-        return callback(err);
-      }
-      throw err;
-    });
-  }
-
-  /**
-   * Perform operations using bulk API
-   * More info: https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
-   *
-   * @param {Object[]} data - must be in the format specified in the bulk API
-   * @param {Function} [callback] - only in case callback style is used
-   *
-   * @return {Promise} only return promise if no callback is passed
-   *
-   */
-  bulk (data, callback) {
-    return this.client.bulk({
-      index: this.index,
-      type: this.type,
-      body: data,
-      refresh: true
-    })
-    .then(result => {
-      if (callback) {
-        return callback(null, result);
-      }
-      return result;
-    })
-    .catch(err => {
-      if (callback) {
-        return callback(err);
-      }
-      throw err;
-    });
-  }
-
-  /**
    * Delete all the documents
    *
    * @param {Function} [callback] - only in case callback style is used
    *
-   * @return {Promise} only return promise if no callback is passed
+   * @return {Promise}
    *
    */
   clear (callback) {
@@ -150,12 +82,80 @@ class Loader {
   }
 
   /**
+   * Delete index and re-create it setting optional mappings
+   *
+   * @param {Object} [data] - must be in the format specified
+   * @param {Function} [callback] - only in case callback style is used
+   *
+   * @return {Promise}
+   *
+   */
+  recreateIndex (data, callback) {
+    if (typeof data === 'function') {
+      callback = data;
+      data = undefined;
+    }
+    return this.client.indices.delete({
+      index: this.index,
+      ignore: [404]
+    })
+    .then(() => {
+      return this.client.indices.create({
+        index: this.index,
+        body: data
+      });
+    })
+    .then(() => {
+      if (callback) {
+        callback();
+      }
+    })
+    .catch(err => {
+      if (callback) {
+        return callback(err);
+      }
+      throw err;
+    });
+  }
+
+  /**
+   * Perform operations using bulk API
+   * More info: https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
+   *
+   * @param {Object[]} data - must be in the format specified in the bulk API
+   * @param {Function} [callback] - only in case callback style is used
+   *
+   * @return {Promise}
+   *
+   */
+  bulk (data, callback) {
+    return this.client.bulk({
+      index: this.index,
+      type: this.type,
+      body: data,
+      refresh: true
+    })
+    .then(result => {
+      if (callback) {
+        return callback(null, result);
+      }
+      return result;
+    })
+    .catch(err => {
+      if (callback) {
+        return callback(err);
+      }
+      throw err;
+    });
+  }
+
+  /**
    * Add mapping to specified type
    *
    * @param {Object} data - mapping data
    * @param {Function} [callback] - only in case callback style is used
    *
-   * @return {Promise} only return promise if no callback is passed
+   * @return {Promise}
    *
    */
   addMapping (data, callback) {
