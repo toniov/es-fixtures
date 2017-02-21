@@ -3,7 +3,7 @@
 const esFixtures = require('../src');
 const test = require('ava');
 // use a different index for each test
-const indexes = ['bulk_index', 'clear_index', 'recreate_index', 'recreate_unexistent_index', 'mapping_index', 'load_random_index', 'load_incremental_index'];
+const indexes = ['bulk_index', 'clear_index', 'recreate_index', 'recreate_unexistent_index', 'mapping_index', 'load_random_index', 'load_incremental_index', 'clear_load_index'];
 
 test.before('delete indexes in case they exist', async () => {
   const client = esFixtures.bootstrap().client;
@@ -142,7 +142,43 @@ test('should add documents with random ids', async (t) => {
     incremental: true
   };
   const result = await loader.load(data, options);
-  console.log(JSON.stringify(result, 0, 2))
+});
+
+test('should clear and add documents with random ids', async (t) => {
+  const loader = esFixtures.bootstrap('clear_load_index', 'my_type');
+  // insert mock data
+  for (let i = 0; i < 100; i++) {
+    let doc = await loader.client.create({
+      index: 'clear_load_index',
+      type: 'my_type',
+      id: i,
+      refresh: true,
+      body: {
+        title: `Inserted in ${i} place`,
+      }
+    });
+  }
+  // count inserted number of documents
+  const countBefore = await loader.client.count({
+    index: 'clear_load_index',
+    type: 'my_type'
+  });
+  t.is(countBefore.count, 100);
+  // delete all inserted documents and add new ones
+  const data = [{
+    name: 'Jotaro',
+    standName: 'Star Platinum'
+  }, {
+    name: 'Jolyne',
+    standName: 'Stone Free'
+  }];
+  const result = await loader.clearAndLoad(data);
+  // count again after clearing and loading them
+  const countAfter = await loader.client.count({
+    index: 'clear_load_index',
+    type: 'my_type'
+  });
+  t.is(countAfter.count, 2);
 });
 
 test.after.always('remove created indexes', async () => {

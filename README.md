@@ -94,6 +94,25 @@ loader.clear()
   });
 ```
 
+### clearAndLoad(data, options, callback)
+
+Delete all the documents in the index and type specified and load new ones. Basically executes first `.clear()` and then `.load()` (check them to see more details).
+
+```js
+const data = [{
+  name: 'Josuke',
+  standName: 'Crazy Diamond'
+}, {
+  name: 'Joseph',
+  standName: 'Hermit Purple'
+}];
+
+loader.clearAndLoad(data)
+  .catch(err => {
+    // error handling
+  });
+```
+
 ### recreateIndex(data, callback)
 
 Delete index and create it again. `data` is optional: providing type mappings while recreating the index is possible, as well as other settings, format [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/indices-create-index.html).
