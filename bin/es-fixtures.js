@@ -12,7 +12,8 @@ if (argv._[3]) {
 
 const loader = esFixtures.bootstrap(index, type, {
   host: argv.h || argv.host,
-  log: argv.l || argv.log
+  log: argv.l || argv.log,
+  apiVersion: argv.v || argv.version
 });
 
 loader[commandName](data, { incremental: argv.i || argv.incremental })

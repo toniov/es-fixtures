@@ -25,7 +25,7 @@ All the methods defined in the API can be executed through the CLI. The `data` p
 
 
 ```
-es-fixtures <command-name> <index-name> <type-name> [data-file] [-h host] [-l log] [-i incremental]
+es-fixtures <command-name> <index-name> <type-name> [data-file] [-h host] [-l log] [-i incremental] [-v version]
 ```
 
 For example:
@@ -47,7 +47,12 @@ es-fixtures clearAndLoad my_index my_type fixtures2.js
 es-fixtures clear my_index my_type
 ```
 
-By default it will run in local, but `host` can be specified. Also logging level can be specified setting `log`, by default it will be off.
+### options
+
+- `-h` By default it will run in local, but `host` can be specified.
+- `-l` Also logging level can be specified setting `log`, by default it will be off
+- `-i` Incremental mode for `load` method, by default insert random `_id`
+- `-v` Specify Elasticsearch API version, it should work without setting it, but could be good to set it just in case in the future the API changes
 
 For example:
 
