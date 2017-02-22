@@ -24,4 +24,5 @@ loader[commandName](data, { incremental: argv.i || argv.incremental })
   })
   .catch(err => {
     console.log(`Error happened: ${err.message}`);
+    process.exit(1);
   });
