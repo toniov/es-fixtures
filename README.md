@@ -9,6 +9,7 @@ Simple fixture loading for Elasticsearch on Node.js. Clean and load easily mock 
   - Native Promises usage
 - ES6 usage
 - The only dependencies are [minimist](https://github.com/substack/minimist) for the CLI and the official [Elasticsearch javascript driver](https://github.com/elastic/elasticsearch-js)
+- Tested in Elasticsearch 1.x, 2.x and 5.x
 
 # CLI
 
@@ -36,10 +37,10 @@ es-fixtures load my_index my_type fixtures.json
 
 ```bash
 echo 'module.exports = [{name: "Dio"}]' > fixtures.js
-es-fixtures load my_index my_type fixtures.json -i
+es-fixtures load my_index my_type fixtures.js -i
 
 echo 'module.exports = [{name: "Abdul"},{name: "Polnareff"}]' > fixtures2.js
-es-fixtures clearAndLoad my_index my_type fixtures.json
+es-fixtures clearAndLoad my_index my_type fixtures2.js
 ```
 
 ```bash
