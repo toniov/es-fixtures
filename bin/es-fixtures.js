@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 const esFixtures = require('../src/');
 const argv = require('minimist')(process.argv.slice(2));
