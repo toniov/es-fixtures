@@ -161,12 +161,12 @@ class Loader {
       });
     })
     .then(() => {
-      if (callback) {
+      if (callback && typeof callback === 'function') {
         callback();
       }
     })
     .catch(err => {
-      if (callback) {
+      if (callback && typeof callback === 'function') {
         return callback(err);
       }
       throw err;
@@ -191,13 +191,13 @@ class Loader {
       refresh: true
     })
     .then(result => {
-      if (callback) {
+      if (callback && typeof callback === 'function') {
         return callback(null, result);
       }
       return result;
     })
     .catch(err => {
-      if (callback) {
+      if (callback && typeof callback === 'function') {
         return callback(err);
       }
       throw err;
@@ -220,7 +220,7 @@ class Loader {
       body: data
     })
     .catch(err => {
-      if (callback) {
+      if (callback && typeof callback === 'function') {
         return callback(err);
       }
       throw err;
