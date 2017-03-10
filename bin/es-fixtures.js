@@ -18,7 +18,14 @@ const loader = esFixtures.bootstrap(index, type, {
   apiVersion: argv.v || argv.version
 });
 
-loader[commandName](data, { incremental: argv.i || argv.incremental })
+let options;
+if (argv.i || argv.incremental) {
+  options = {
+    incremental: argv.i || argv.incremental
+  };
+}
+
+loader[commandName](data, options)
   .then(() => {
     console.log(`${commandName} executed correctly.`);
   })
