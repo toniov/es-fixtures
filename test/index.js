@@ -3,7 +3,7 @@
 const esFixtures = require('../src');
 const test = require('ava');
 // use a different index for each test
-const indexes = ['bulk_index', 'clear_index', 'recreate_index', 'recreate_unexistent_index', 'mapping_index', 'load_random_index', 'load_incremental_index', 'clear_load_index'];
+const indexes = ['bulk_index', 'clear_index', 'recreate_index', 'recreate_unexistent_index', 'mapping_index', 'load_random_index', 'load_incremental_index', 'clear_load_index', 'load_assigned_id_index'];
 
 test.before('delete indexes in case they exist', async () => {
   const client = esFixtures.bootstrap().client;
@@ -164,6 +164,29 @@ test('should add documents with incremental ids', async (t) => {
   t.is(result1._source.name, 'Jotaro');
   t.is(result2._source.name, 'Jolyne');
 });
+
+test('should add documents with id specified inside doc', async (t) => {
+  const index = 'load_assigned_id_index';
+  const loader = esFixtures.bootstrap(index, 'my_type');
+  const data = [{
+    _id: 1,
+    name: 'Jotaro',
+    standName: 'Star Platinum'
+  }, {
+    _id: 2,
+    name: 'Jolyne',
+    standName: 'Stone Free'
+  }];
+  await loader.load(data);
+
+  // check it was inserted correctly
+  const searchResult = (await loader.client.search({
+    index: index
+  })).hits.hits;
+  const result1 = searchResult.find(result => result._id === '1');
+  const result2 = searchResult.find(result => result._id === '2');
+  t.is(result1._source.name, 'Jotaro');
+  t.is(result2._source.name, 'Jolyne');
 });
 
 test('should clear and add documents with random ids', async (t) => {

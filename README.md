@@ -110,9 +110,9 @@ loader.bulk(data)
 
 ### load(data, options, callback)
 
-Add documents into the specified index and type. `data` contains an array of objects the documents to add to the index.
+Add documents into the specified index and type. `data` contains an array of objects the documents to add to the index. It assigns a random `_id` (Elasticsearch default behaviour).
 
-`options` is an optional argument. `incremental: true` insert documents assigning an incremental `_id` from 1, by default it assigns a random `_id` (Elasticsearch default behaviour). In incremental mode it will overwrite existent documents with the same `_id`.
+`options` is an optional argument. `incremental: true` insert documents assigning an incremental `_id` from 1 instead of a random one. It will overwrite existent documents with the same `_id`.
 
 ```js
 const data = [{
@@ -126,6 +126,25 @@ const data = [{
 const options = {
   incremental: true
 };
+
+loader.load(data, options)
+  .catch(err => {
+    // error handling
+  });
+```
+
+Also, it is possible to add the desired `_id` inside each document (used altogether with `incremental: true` will fail).
+
+```js
+const data = [{
+  _id: 1,
+  name: 'Jotaro',
+  standName: 'Star Platinum'
+}, {
+  _id: 2,
+  name: 'Jolyne',
+  standName: 'Stone Free'
+}];
 
 loader.load(data, options)
   .catch(err => {

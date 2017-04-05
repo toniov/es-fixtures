@@ -52,7 +52,12 @@ class Loader {
       });
     } else {
       data.forEach(doc => {
-        bulkData.push({ index: {} });
+        if (doc._id) {
+          bulkData.push({ index: { _id: doc._id } });
+          delete doc._id;
+        } else {
+          bulkData.push({ index: {} });
+        }
         bulkData.push(doc);
       });
     }
