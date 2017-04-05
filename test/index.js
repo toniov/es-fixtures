@@ -118,7 +118,8 @@ test('should add mapping', async (t) => {
 });
 
 test('should add documents with random ids', async (t) => {
-  const loader = esFixtures.bootstrap('load_random_index', 'my_type');
+  const index = 'load_random_index';
+  const loader = esFixtures.bootstrap(index, 'my_type');
   const data = [{
     name: 'Jotaro',
     standName: 'Star Platinum'
@@ -126,11 +127,22 @@ test('should add documents with random ids', async (t) => {
     name: 'Jolyne',
     standName: 'Stone Free'
   }];
-  const result = await loader.load(data);
+  await loader.load(data);
+
+  // check it was inserted correctly
+  const searchResult = (await loader.client.search({
+    index: index
+  })).hits.hits;
+  const result1 = searchResult.some(result => result._source.name === 'Jotaro');
+  const result2 = searchResult.some(result => result._source.name === 'Jolyne');
+  t.is(searchResult.length, 2);
+  t.true(result1);
+  t.true(result2);
 });
 
-test('should add documents with random ids', async (t) => {
-  const loader = esFixtures.bootstrap('load_incremental_index', 'my_type');
+test('should add documents with incremental ids', async (t) => {
+  const index = 'load_incremental_index';
+  const loader = esFixtures.bootstrap(index, 'my_type');
   const data = [{
     name: 'Jotaro',
     standName: 'Star Platinum'
@@ -141,7 +153,17 @@ test('should add documents with random ids', async (t) => {
   const options = {
     incremental: true
   };
-  const result = await loader.load(data, options);
+  await loader.load(data, options);
+
+  // check it was inserted correctly
+  const searchResult = (await loader.client.search({
+    index: index
+  })).hits.hits;
+  const result1 = searchResult.find(result => result._id === '1');
+  const result2 = searchResult.find(result => result._id === '2');
+  t.is(result1._source.name, 'Jotaro');
+  t.is(result2._source.name, 'Jolyne');
+});
 });
 
 test('should clear and add documents with random ids', async (t) => {

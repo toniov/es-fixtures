@@ -48,6 +48,7 @@ class Loader {
       data.forEach(doc => {
         bulkData.push({ index: { _id: count } });
         bulkData.push(doc);
+        count++;
       });
     } else {
       data.forEach(doc => {
