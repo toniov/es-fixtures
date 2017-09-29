@@ -1,6 +1,6 @@
 {
   "name": "esfix",
-  "version": "0.7.1",
+  "version": "1.0.0",
   "description": "Simple fixture loading for Elasticsearch on Node.js.",
   "main": "src/index.js",
   "bin": {
