@@ -3,20 +3,23 @@
 const esFixtures = require('../src');
 const test = require('ava');
 // use a different index for each test
-const indexes = ['bulk_index', 'clear_index', 'recreate_index', 'recreate_unexistent_index', 'mapping_index', 'load_random_index', 'load_incremental_index', 'clear_load_index', 'load_assigned_id_index'];
+const indexes = ['bulk_index', 'clear_index', 'create_index', 'create_unexistent_index', 'mapping_index', 
+  'load_random_index', 'load_incremental_index', 'clear_load_index', 'load_assigned_id_index'];
+const type = 'my_type';
 
 test.before('delete indexes in case they exist', async () => {
   const client = esFixtures.bootstrap().client;
-  indexes.forEach(async (index) => {
-    await client.indices.delete({
+  const arrayOfPromsies = indexes.map(async (index) => {
+    return client.indices.delete({
       index: index,
       ignore: [404]
     });
   });
+  await Promise.all(arrayOfPromsies);
 });
 
 test('should use bulk properly', async (t) => {
-  const loader = esFixtures.bootstrap('bulk_index', 'my_type', 'recreate_index');
+  const loader = esFixtures.bootstrap('bulk_index', type);
   const data = [
     { index: { _id: 1 } },
     { name: 'Jotaro' },
@@ -28,12 +31,13 @@ test('should use bulk properly', async (t) => {
 });
 
 test('should clear all documents', async (t) => {
-  const loader = esFixtures.bootstrap('clear_index', 'my_type');
+  const index = 'clear_index';
+  const loader = esFixtures.bootstrap(index, type);
   // insert mock data
-  for (let i = 0; i < 1000; i++) {
-    let doc = await loader.client.create({
-      index: 'clear_index',
-      type: 'my_type',
+  for (let i = 0; i < 100; i++) {
+    await loader.client.create({
+      index: index,
+      type: type,
       id: i,
       refresh: true,
       body: {
@@ -43,28 +47,28 @@ test('should clear all documents', async (t) => {
   }
   // count inserted number of documents
   const countBefore = await loader.client.count({
-    index: 'clear_index',
-    type: 'my_type'
+    index: index,
+    type: type
   });
-  t.is(countBefore.count, 1000);
+  t.is(countBefore.count, 100);
   // delete all inserted documents
   await loader.clear();
   // count again deleting them
   const countAfter = await loader.client.count({
-    index: 'clear_index',
-    type: 'my_type'
+    index: index,
+    type: type
   });
   t.is(countAfter.count, 0);
 });
 
 test('should re-create existent index', async (t) => {
-  const loader = esFixtures.bootstrap('recreate_index', 'my_type');
+  const loader = esFixtures.bootstrap('create_index', type);
   await loader.client.indices.create({
-    index: 'recreate_index'
+    index: 'create_index'
   });
   const data = {
     mappings: {
-      my_type: {
+      my_type_old: {
         properties: {
           name: {
             type: 'string'
@@ -73,17 +77,18 @@ test('should re-create existent index', async (t) => {
       }
     }
   };
-  await loader.recreateIndex(data);
+  await loader.createIndex(data, { force: true });
   t.notThrows(loader.client.indices.get({
-    index: 'recreate_index'
+    index: 'create_index'
   }));
 });
 
-test('should just create index if it does not exist', async (t) => {
-  const loader = esFixtures.bootstrap('recreate_unexistent_index', 'my_type');
+test('should create index if it does not exist', async (t) => {
+  const index = 'create_unexistent_index';
+  const loader = esFixtures.bootstrap(index, type);
   const data = {
     mappings: {
-      my_type: {
+      [type]: {
         properties: {
           name: {
             type: 'string'
@@ -92,16 +97,17 @@ test('should just create index if it does not exist', async (t) => {
       }
     }
   };
-  await loader.recreateIndex(data);
+  await loader.createIndex(data);
   t.notThrows(loader.client.indices.get({
-    index: 'recreate_unexistent_index'
+    index: 'create_unexistent_index'
   }));
 });
 
 test('should add mapping', async (t) => {
-  const loader = esFixtures.bootstrap('mapping_index', 'my_type');
+  const index = 'mapping_index';
+  const loader = esFixtures.bootstrap(index, type);
   await loader.client.indices.create({
-    index: 'mapping_index'
+    index: index
   });
   const data = {
     properties: {
@@ -111,15 +117,16 @@ test('should add mapping', async (t) => {
     }
   };
   await loader.addMapping(data);
-  const mapping = await loader.client.indices.getMapping({
-    index: 'mapping_index',
-    type: 'my_type'
+  const mappingRes = await loader.client.indices.getMapping({
+    index: index,
+    type: type
   });
+  t.truthy(mappingRes[index].mappings[type]);
 });
 
 test('should add documents with random ids', async (t) => {
   const index = 'load_random_index';
-  const loader = esFixtures.bootstrap(index, 'my_type');
+  const loader = esFixtures.bootstrap(index, type);
   const data = [{
     name: 'Jotaro',
     standName: 'Star Platinum'
@@ -142,7 +149,7 @@ test('should add documents with random ids', async (t) => {
 
 test('should add documents with incremental ids', async (t) => {
   const index = 'load_incremental_index';
-  const loader = esFixtures.bootstrap(index, 'my_type');
+  const loader = esFixtures.bootstrap(index, type);
   const data = [{
     name: 'Jotaro',
     standName: 'Star Platinum'
@@ -167,7 +174,7 @@ test('should add documents with incremental ids', async (t) => {
 
 test('should add documents with id specified inside doc', async (t) => {
   const index = 'load_assigned_id_index';
-  const loader = esFixtures.bootstrap(index, 'my_type');
+  const loader = esFixtures.bootstrap(index, type);
   const data = [{
     _id: 1,
     name: 'Jotaro',
@@ -190,12 +197,12 @@ test('should add documents with id specified inside doc', async (t) => {
 });
 
 test('should clear and add documents with random ids', async (t) => {
-  const loader = esFixtures.bootstrap('clear_load_index', 'my_type');
+  const loader = esFixtures.bootstrap('clear_load_index', type);
   // insert mock data
   for (let i = 0; i < 100; i++) {
-    let doc = await loader.client.create({
+    await loader.client.create({
       index: 'clear_load_index',
-      type: 'my_type',
+      type: type,
       id: i,
       refresh: true,
       body: {
@@ -206,7 +213,7 @@ test('should clear and add documents with random ids', async (t) => {
   // count inserted number of documents
   const countBefore = await loader.client.count({
     index: 'clear_load_index',
-    type: 'my_type'
+    type: type
   });
   t.is(countBefore.count, 100);
   // delete all inserted documents and add new ones
@@ -217,21 +224,22 @@ test('should clear and add documents with random ids', async (t) => {
     name: 'Jolyne',
     standName: 'Stone Free'
   }];
-  const result = await loader.clearAndLoad(data);
+  await loader.clearAndLoad(data, { refresh: false });
   // count again after clearing and loading them
   const countAfter = await loader.client.count({
     index: 'clear_load_index',
-    type: 'my_type'
+    type: type
   });
   t.is(countAfter.count, 2);
 });
 
 test.after.always('remove created indexes', async () => {
   const client = esFixtures.bootstrap().client;
-  indexes.forEach(async (index) => {
-    await client.indices.delete({
+  const arrayOfPromises = indexes.map((index) => {
+    return client.indices.delete({
       index: index,
       ignore: [404]
     });
   });
+  await Promise.all(arrayOfPromises);
 });
