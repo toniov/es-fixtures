@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/toniov/es-fixtures.svg?branch=master)](https://travis-ci.org/toniov/es-fixtures)
 
-Clear and load fixtures easily in your Elasticsearch instance, useful for inserting mock data for Unit Tests or other kind of testing.
+Clear and load fixtures easily in your Elasticsearch instance, useful for unit Testing or other kind of testing.
 
 Tested in Elasticsearch 0.x, 1.x, 2.x and 5.x.
 
@@ -18,8 +18,8 @@ Tested in Elasticsearch 0.x, 1.x, 2.x and 5.x.
     - [clear](#clear)
     - [clearAndLoad](#clearandload)
     - [bulk](#bulk)
-    - [createIndex](#createIndex)
-    - [addMapping](#addMapping)
+    - [createIndex](#createindex)
+    - [addMapping](#addmapping)
     - [help](#help)
 - [Used as module](#used-as-module)
   - [Installation](#installation-1)
@@ -28,6 +28,8 @@ Tested in Elasticsearch 0.x, 1.x, 2.x and 5.x.
     - [Instance methods](#instance-methods)
       - [load](#loaddata-options-callback)
       - [clear](#clearcallback)
+      - [clearAndLoad](#clearandloaddata-options-callback)
+      - [bulk](#bulkdata-options-callback)
       - [createIndex](#createindexdata-callback)
       - [addMapping](#addmappingdata-callback)
 
