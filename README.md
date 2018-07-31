@@ -322,7 +322,7 @@ $ esfix addMapping my_index my_type mapping-info.json
 
 Show help page.
 
-# As a module
+# Used as module
 
 It can be required in your code, useful to automate unit tests.
 
